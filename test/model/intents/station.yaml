@@ -1,0 +1,17 @@
+name: StationIntent
+confirm: false
+samples:
+  - "{qualifier} {fuel} {gas}"
+  - "{qualifier} {fuel}"
+slots:
+  qualifier:
+    type: qualifierType
+    confirm: false
+    prompts:
+      - "Would you like the closest or the cheapest station?"
+      - "I can find either the closest or cheapest station. Which would you like?"
+    samples:
+      - "{article} {qualifier} {fuel} {gas}"
+      - "{qualifier}"
+  fuel:
+    type: fuelType

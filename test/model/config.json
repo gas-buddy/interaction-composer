@@ -1,0 +1,7 @@
+{
+  "intents": {
+    "cancel": "require:./intents/builtin.yaml",
+    "station": "require:./intents/station.yaml"
+  },
+  "slotTypes": "require:./slotTypes.yaml"
+}

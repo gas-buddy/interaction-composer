@@ -1,0 +1,15 @@
+fuelType:
+  lpg:
+    value: "l. p. g."
+  e10:
+    value: "e. ten"
+  regular_gas:
+    value: regular
+    synonyms:
+      - eighty seven
+      - low octane
+      - low grade
+articleType:
+  - a
+  - an
+  - the

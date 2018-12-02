@@ -1,0 +1,4 @@
+{
+  "INVOCATION_NAME": "test skill",
+  "invocation": "config:INVOCATION_NAME"
+}
