@@ -1,8 +1,11 @@
 {
   "name": "@gasbuddy/interaction-composer",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A command line tool to build interaction models (for Alexa for now) based on an intermediate format that is easier to maintain in source control and across deployment environments.",
   "main": "build/index.js",
+  "bin": {
+    "interaction-composer": "build/index.js"
+  },
   "scripts": {
     "test": "tap --node-arg=-r --node-arg=@babel/register test/*.js",
     "cover": "cross-env BABEL_ENV=test nyc tap test/test_*.js && nyc check-coverage && nyc report --reporter=text",
