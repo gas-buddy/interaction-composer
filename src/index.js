@@ -75,6 +75,7 @@ function bail(error) {
   if (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to generate model:', error.message);
+    logger(error);
     process.exit(-1);
   }
 }
@@ -99,10 +100,10 @@ confit({ basedir, protocols }).create(async (err, config) => {
   }
   if (argv.output) {
     const outfile = path.resolve(argv.output);
-    fs.writeFileSync(outfile, JSON.stringify(outputModel, null, '\t'));
+    fs.writeFileSync(outfile, JSON.stringify(outputModel, null, '  '));
     debuglog('Wrote output to %s', argv.output);
   } else {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(outputModel, null, '\t'));
+    console.log(JSON.stringify(outputModel, null, '  '));
   }
 });

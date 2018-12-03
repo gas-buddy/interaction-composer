@@ -1,5 +1,12 @@
 const slotRE = /\{([^}]+)}/g;
 
+const builtInTypes = [
+  'builtin:number',
+  'builtin:address',
+  'builtin:phoneNumber',
+  'builtin:cityState',
+];
+
 export default function validateModel(config, intents, types) {
   const okTypes = {};
   Object.entries(types).forEach(([name]) => {
@@ -28,8 +35,11 @@ export default function validateModel(config, intents, types) {
 
     Object.entries(intent.slots || {})
       .forEach(([slotName, slot]) => {
-        const { type } = slot;
-        if (!okTypes[type]) {
+        let type = slot;
+        if (typeof slot !== 'string') {
+          ({ type } = slot);
+        }
+        if (!okTypes[type] && !builtInTypes.includes(type)) {
           // eslint-disable-next-line no-console
           console.error(`${intent.name}:${slotName} references non-existent type ${type}`);
           error = true;

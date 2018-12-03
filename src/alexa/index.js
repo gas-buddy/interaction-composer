@@ -1,11 +1,25 @@
 import assert from 'assert';
 import expandCombinations from '../expand';
 
+const builtInTypes = {
+  'builtin:number': 'AMAZON.NUMBER',
+  'builtin:address': 'AMAZON.PostalAddress',
+  'builtin:phoneNumber': 'AMAZON.PhoneNumber',
+  'builtin:cityState': 'AMAZON.AdministrativeArea',
+};
+
 function intentOnlyBits(intent) {
   const { confirmationRequired, slots, ...restIntent } = intent;
   let intentSlots;
   if (slots) {
-    intentSlots = Object.entries(slots).map(([name, detail]) => {
+    intentSlots = Object.entries(slots).map(([name, detailOrType]) => {
+      let detail = detailOrType;
+      if (typeof detailOrType === 'string') {
+        detail = { type: detailOrType };
+      }
+      if (builtInTypes[detail.type]) {
+        detail.type = builtInTypes;
+      }
       assert(detail.type, `${name} slot in ${intent.name} is missing a type`);
       return {
         name,
