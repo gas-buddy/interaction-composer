@@ -33,7 +33,12 @@ export default function validateModel(config, intents, types) {
       }
     };
 
-    expandSamples(intent.samples || []).forEach(verifySlotsInUtterance.bind(null, intent.name));
+    try {
+      expandSamples(intent.samples || []).forEach(verifySlotsInUtterance.bind(null, intent.name));
+    } catch (expError) {
+      expError.message = `${intent.name}: ${expError.message}`;
+      throw expError;
+    }
 
     Object.entries(intent.slots || {})
       .forEach(([slotName, slot]) => {

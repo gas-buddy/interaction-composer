@@ -22,7 +22,7 @@ function generateExpandedSet(prefix, remainder, expansions) {
 export function expandCombinations(values) {
   const final = [];
   values.forEach((value) => {
-    final.push(...generateExpandedSet('', value.split('['), []));
+    final.push(...generateExpandedSet('', (value || '').split('['), []));
   });
   return final;
 }

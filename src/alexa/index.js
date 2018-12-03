@@ -21,18 +21,28 @@ function intentOnlyBits(intent) {
         detail.type = builtInTypes;
       }
       assert(detail.type, `${name} slot in ${intent.name} is missing a type`);
-      return {
-        name,
-        type: detail.type,
-        samples: expandSamples(detail.samples),
-      };
+      try {
+        return {
+          name,
+          type: detail.type,
+          samples: expandSamples(detail.samples),
+        };
+      } catch (error) {
+        error.message = `${intent.name}.${name}: ${error.message}`;
+        throw error;
+      }
     });
   }
-  return {
-    ...restIntent,
-    samples: expandSamples(samples),
-    slots: intentSlots,
-  };
+  try {
+    return {
+      ...restIntent,
+      samples: expandSamples(samples),
+      slots: intentSlots,
+    };
+  } catch (error) {
+    error.message = `${intent.name}: ${error.message}`;
+    throw error;
+  }
 }
 
 function dialogBits(intent) {

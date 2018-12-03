@@ -75,7 +75,7 @@ const protocols = {
 function bail(error) {
   if (error) {
     // eslint-disable-next-line no-console
-    console.error('Failed to generate model:', error.message);
+    console.error('Failed to generate model:', error);
     logger(error);
     process.exit(-1);
   }
