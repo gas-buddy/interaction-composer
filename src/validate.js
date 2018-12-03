@@ -51,7 +51,12 @@ export default function validateModel(config, intents, types) {
           console.error(`${intent.name}:${slotName} references non-existent type ${type}`);
           error = true;
         }
-        (slot?.samples || []).forEach(verifySlotsInUtterance.bind(null, `${intent.name}:${slotName}`));
+        try {
+          expandSamples(slot?.samples || []).forEach(verifySlotsInUtterance.bind(null, `${intent.name}:${slotName}`));
+        } catch (expError) {
+          expError.message = `${intent.name}.${slotName}: ${expError.message}`;
+          throw expError;
+        }
       });
   });
   if (error) {

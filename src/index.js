@@ -8,6 +8,8 @@ import { debuglog } from 'util';
 import buildAlexa from './alexa';
 import validateModel from './validate';
 
+require('source-map-support').install();
+
 const logger = debuglog('interaction-composer');
 
 const argv = minimist(process.argv.slice(2));
