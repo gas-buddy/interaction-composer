@@ -3,7 +3,11 @@ import path from 'path';
 import confit from 'confit';
 import minimist from 'minimist';
 import yaml from 'js-yaml';
+import { debuglog } from 'util';
 import buildAlexa from './alexa';
+import validateModel from './validate';
+
+const logger = debuglog('interaction-composer');
 
 const argv = minimist(process.argv.slice(2));
 
@@ -36,10 +40,20 @@ async function loadFileDependency(p) {
   }));
 }
 
-const basedir = path.resolve(argv._[0]);
-if (!argv.quiet) {
-  console.log('Building model from', basedir);
+function flatten(map) {
+  const flat = [];
+  Object.values(map || {}).forEach((entry) => {
+    if (Array.isArray(entry)) {
+      flat.push(...entry);
+    } else {
+      flat.push(entry);
+    }
+  });
+  return flat;
 }
+
+const basedir = path.resolve(argv._[0]);
+logger('Building model from %s', basedir);
 
 const protocols = {
   async require(value, callback) {
@@ -48,16 +62,38 @@ const protocols = {
   },
 };
 
-confit({ basedir, protocols }).create(async (err, config) => {
-  if (err) {
-    console.error('Failed to generate model', err);
+function bail(error) {
+  if (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to generate model:', error.message);
     process.exit(-1);
   }
+}
+
+confit({ basedir, protocols }).create(async (err, config) => {
+  bail(err);
+
+  const intents = flatten(config.get('intents'));
+  const slotTypes = config.get('slotTypes');
+
+  try {
+    await validateModel(config, intents, slotTypes);
+  } catch (error) {
+    bail(error);
+  }
+
   // If we're going to export to multiple formats, switch here.
   let outputModel;
   switch (argv.format) {
     default:
-      outputModel = await buildAlexa(config);
+      outputModel = await buildAlexa(config, intents, slotTypes);
   }
-  console.log(JSON.stringify(outputModel, null, '\t'));
+  if (argv.output) {
+    const outfile = path.resolve(argv.output);
+    fs.writeFileSync(outfile, JSON.stringify(outputModel, null, '\t'));
+    debuglog('Wrote output to %s', argv.output);
+  } else {
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify(outputModel, null, '\t'));
+  }
 });

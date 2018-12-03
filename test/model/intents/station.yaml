@@ -1,9 +1,10 @@
 name: StationIntent
 confirm: false
 samples:
-  - "{qualifier} {fuel} {gas}"
-  - "{qualifier} {fuel}"
+  - "Find {qualifier} {fuel}"
 slots:
+  article:
+    type: articleType
   qualifier:
     type: qualifierType
     confirm: false
@@ -11,7 +12,7 @@ slots:
       - "Would you like the closest or the cheapest station?"
       - "I can find either the closest or cheapest station. Which would you like?"
     samples:
-      - "{article} {qualifier} {fuel} {gas}"
+      - "{article} {qualifier} {fuel}"
       - "{qualifier}"
   fuel:
     type: fuelType

@@ -13,3 +13,6 @@ articleType:
   - a
   - an
   - the
+qualifierType:
+  - cheapest
+  - closest

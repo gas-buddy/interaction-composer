@@ -1,17 +1,5 @@
 import assert from 'assert';
 
-function flatten(map) {
-  const flat = [];
-  Object.values(map || {}).forEach((entry) => {
-    if (Array.isArray(entry)) {
-      flat.push(...entry);
-    } else {
-      flat.push(entry);
-    }
-  });
-  return flat;
-}
-
 function intentOnlyBits(intent) {
   const { confirmationRequired, slots, ...restIntent } = intent;
   let intentSlots;
@@ -94,8 +82,8 @@ function typeValue(values) {
   });
 }
 
-function buildAlexaTypes(config) {
-  return Object.entries(config.get('slotTypes'))
+function buildAlexaTypes(slotTypes) {
+  return Object.entries(slotTypes)
     .map(([name, values]) => ({
       name,
       values: typeValue(values),
@@ -103,9 +91,8 @@ function buildAlexaTypes(config) {
 }
 
 // Turn our internal representation into an Alexa model
-export default async function buildAlexa(config) {
-  const intents = flatten(config.get('intents'));
-  const types = buildAlexaTypes(config);
+export default async function buildAlexa(config, intents, slotTypes) {
+  const alexaTypes = buildAlexaTypes(slotTypes);
 
   assert(config.get('invocation'), 'Must have invocation value (for Alexa invocation phrase)');
   return {
@@ -113,7 +100,7 @@ export default async function buildAlexa(config) {
       languageModel: {
         invocationName: config.get('invocation'),
         intents: intents.map(intentOnlyBits).filter(i => !!i),
-        types,
+        types: alexaTypes,
       },
       dialog: {
         intents: intents.map(dialogBits).filter(i => !!i),
