@@ -1,5 +1,5 @@
 import assert from 'assert';
-import expandCombinations from '../expand';
+import { expandCombinations, expandSamples } from '../expand';
 
 const builtInTypes = {
   'builtin:number': 'AMAZON.NUMBER',
@@ -24,7 +24,7 @@ function intentOnlyBits(intent) {
       return {
         name,
         type: detail.type,
-        samples: detail.samples,
+        samples: expandSamples(detail.samples),
       };
     });
   }
@@ -65,7 +65,7 @@ function getPrompts(intents) {
       if (slot.prompts) {
         prompts.push({
           id: `elicit-${intent.name}.${slotName}`,
-          variations: slot.prompts.map(value => ({
+          variations: expandSamples(slot.prompts).map(value => ({
             type: 'PlainText',
             value,
           })),
@@ -85,7 +85,15 @@ function typeValue(values) {
       },
     }));
   }
-  return Object.entries(values).map(([id, { value, synonyms, ...invalid }]) => {
+  return Object.entries(values).map(([id, spec]) => {
+    let value;
+    let synonyms;
+    let invalid;
+    if (Array.isArray(spec)) {
+      synonyms = spec;
+    } else {
+      ({ value, synonyms, ...invalid } = spec);
+    }
     assert(!invalid || Object.keys(invalid).length === 0, `Found invalid keys on ${id}: ${JSON.stringify(invalid)}`);
     return {
       id,

@@ -80,6 +80,10 @@ function bail(error) {
   }
 }
 
+if (argv.env) {
+  process.env.NODE_ENV = argv.env;
+}
+
 confit({ basedir, protocols }).create(async (err, config) => {
   bail(err);
 
