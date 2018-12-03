@@ -11,9 +11,11 @@ tap.test('test_expansions', (t) => {
   t.strictEquals(exp[0], 'this is a test', 'Should generate first');
   t.strictEquals(exp[1], 'this was a test', 'Should generate second');
 
-  exp = expandCombinations(['tell [us|me] [what|what is|where|where is|about]']);
-  t.strictEquals(exp.length, 10, 'Should expand into 10 values');
+  exp = expandCombinations(['tell [us|me] [|what|what is|where|where is|about]']);
+  t.strictEquals(exp.length, 12, 'Should expand into 10 values');
   [
+    'tell us',
+    'tell me',
     'tell us what',
     'tell us what is',
     'tell us where',
