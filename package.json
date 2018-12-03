@@ -1,6 +1,6 @@
 {
   "name": "@gasbuddy/interaction-composer",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "A command line tool to build interaction models (for Alexa for now) based on an intermediate format that is easier to maintain in source control and across deployment environments.",
   "main": "build/index.js",
   "bin": {
