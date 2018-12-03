@@ -6,6 +6,7 @@ const builtInTypes = {
   'builtin:address': 'AMAZON.PostalAddress',
   'builtin:phoneNumber': 'AMAZON.PhoneNumber',
   'builtin:cityState': 'AMAZON.AdministrativeArea',
+  'builtin:fourDigitNumber': 'AMAZON.FOUR_DIGIT_NUMBER',
 };
 
 function intentOnlyBits(intent) {

@@ -7,6 +7,7 @@ const builtInTypes = [
   'builtin:address',
   'builtin:phoneNumber',
   'builtin:cityState',
+  'builtin:fourDigitNumber',
 ];
 
 export default function validateModel(config, intents, types) {
