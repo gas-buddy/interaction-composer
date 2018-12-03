@@ -52,6 +52,15 @@ function flatten(map) {
   return flat;
 }
 
+function merge(types) {
+  if (Array.isArray(types)) {
+    const merged = {};
+    types.forEach(m => Object.assign(merged, m));
+    return merged;
+  }
+  return types;
+}
+
 const basedir = path.resolve(argv._[0]);
 logger('Building model from %s', basedir);
 
@@ -74,7 +83,7 @@ confit({ basedir, protocols }).create(async (err, config) => {
   bail(err);
 
   const intents = flatten(config.get('intents'));
-  const slotTypes = config.get('slotTypes');
+  const slotTypes = merge(config.get('slotTypes'));
 
   try {
     await validateModel(config, intents, slotTypes);
