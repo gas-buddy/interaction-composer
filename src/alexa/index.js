@@ -1,4 +1,5 @@
 import assert from 'assert';
+import expandCombinations from '../expand';
 
 function intentOnlyBits(intent) {
   const { confirmationRequired, slots, ...restIntent } = intent;
@@ -63,7 +64,7 @@ function getPrompts(intents) {
 
 function typeValue(values) {
   if (Array.isArray(values)) {
-    return values.map(value => ({
+    return expandCombinations(values).map(value => ({
       // Not really sure why this format is so strange
       name: {
         value,
