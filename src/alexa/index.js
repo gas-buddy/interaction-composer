@@ -76,7 +76,7 @@ function typeValue(values) {
     return {
       id,
       name: {
-        value,
+        value: value || id,
         synonyms: synonyms || undefined,
       },
     };
