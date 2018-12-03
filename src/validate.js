@@ -1,3 +1,5 @@
+import { expandSamples } from './expand';
+
 const slotRE = /\{([^}]+)}/g;
 
 const builtInTypes = [
@@ -31,7 +33,7 @@ export default function validateModel(config, intents, types) {
       }
     };
 
-    (intent.samples || []).forEach(verifySlotsInUtterance.bind(null, intent.name));
+    expandSamples(intent.samples || []).forEach(verifySlotsInUtterance.bind(null, intent.name));
 
     Object.entries(intent.slots || {})
       .forEach(([slotName, slot]) => {

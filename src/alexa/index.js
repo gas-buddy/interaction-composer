@@ -9,7 +9,7 @@ const builtInTypes = {
 };
 
 function intentOnlyBits(intent) {
-  const { confirmationRequired, slots, ...restIntent } = intent;
+  const { confirmationRequired, samples, slots, ...restIntent } = intent;
   let intentSlots;
   if (slots) {
     intentSlots = Object.entries(slots).map(([name, detailOrType]) => {
@@ -30,6 +30,7 @@ function intentOnlyBits(intent) {
   }
   return {
     ...restIntent,
+    samples: expandSamples(samples),
     slots: intentSlots,
   };
 }
