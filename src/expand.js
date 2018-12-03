@@ -57,8 +57,11 @@ export function expandSamples(samples) {
     if (ix + 1 < samples.length && Array.isArray(samples[ix + 1])) {
       // Don't produce any nodes yet
       pending = expandCombinations([sample]);
+    } else if (Array.isArray(sample)) {
+      // Expansions may happen lower down
+      finalSet.push(...expandSamples(sample));
     } else {
-      // Simple, just expand if necessary
+      // Simple, just expand pipe expressions if necessary
       finalSet.push(...expandCombinations([sample]));
     }
   });
