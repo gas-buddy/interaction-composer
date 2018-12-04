@@ -28,7 +28,7 @@ function intentOnlyBits(intent) {
         detail = { type: detailOrType };
       }
       if (builtInTypes[detail.type]) {
-        detail.type = builtInTypes;
+        detail.type = builtInTypes[detail.type];
       }
       assert(detail.type, `${name} slot in ${intent.name} is missing a type`);
       try {
@@ -160,10 +160,10 @@ export default async function buildAlexa(config, intents, slotTypes) {
         intents: intents.map(intentOnlyBits).filter(i => !!i),
         types: alexaTypes,
       },
-      dialog: {
-        intents: intents.map(dialogBits).filter(i => !!i),
-      },
-      prompts: getPrompts(intents),
     },
+    dialog: {
+      intents: intents.map(dialogBits).filter(i => !!i),
+    },
+    prompts: getPrompts(intents),
   };
 }
