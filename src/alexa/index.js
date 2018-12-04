@@ -9,8 +9,17 @@ const builtInTypes = {
   'builtin:fourDigitNumber': 'AMAZON.FOUR_DIGIT_NUMBER',
 };
 
+function getSamples(slotName, slot, intentSamples) {
+  if (Object.prototype.hasOwnProperty.call(slot, 'samples')) {
+    return expandSamples(slot.samples);
+  }
+  const pattern = `{${slotName}}`;
+  return intentSamples.filter(s => s.indexOf(pattern) >= 0);
+}
+
 function intentOnlyBits(intent) {
   const { confirmationRequired, samples, slots, ...restIntent } = intent;
+  const expandedSamples = expandSamples(samples);
   let intentSlots;
   if (slots) {
     intentSlots = Object.entries(slots).map(([name, detailOrType]) => {
@@ -23,11 +32,12 @@ function intentOnlyBits(intent) {
       }
       assert(detail.type, `${name} slot in ${intent.name} is missing a type`);
       try {
-        return {
+        const slotInfo = {
           name,
           type: detail.type,
-          samples: expandSamples(detail.samples),
+          samples: getSamples(name, detail, expandedSamples),
         };
+        return slotInfo;
       } catch (error) {
         error.message = `${intent.name}.${name}: ${error.message}`;
         throw error;
@@ -37,7 +47,7 @@ function intentOnlyBits(intent) {
   try {
     return {
       ...restIntent,
-      samples: expandSamples(samples),
+      samples: expandedSamples,
       slots: intentSlots,
     };
   } catch (error) {
