@@ -56,7 +56,7 @@ is this {station} open right now
 Additionally, you can use nested arrays (they're weird in YAML) to have common root patterns:
 
 ```
-- more [|{details}]
+- [|more] [|{details}]
 - -
   - about this [|{station}]
 ```
@@ -69,4 +69,10 @@ more about this
 more about this {station}
 more {details} about this
 more {details} about this station
+details
+{details}
+about this
+about this {station}
+{details} about this
+{details} about this station
 ```

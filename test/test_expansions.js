@@ -40,8 +40,13 @@ tap.test('test_expansions', (tester) => {
     exp = expandSamples(['this [is|was]', ['a test', 'not a test']]);
     verifyAll(t, exp, 'this is a test', 'this was a test', 'this is not a test', 'this was not a test');
 
-    exp = expandSamples(['1', '2', ['', '1', ['1', '2'], '2'], '3', ['1', '2']]);
-    verifyAll(t, exp, ...'1,2,2 1 1,2 1 2,2 2,3 1,3 2'.split(','));
+    exp = expandSamples(['1', '2', [null, '1', ['', '1', '2'], '2'], '3', ['1', '2']]);
+    verifyAll(t, exp, ...'1,2,2 1,2 1 1,2 1 2,2 2,3 1,3 2'.split(','));
+
+    exp = expandSamples(['[|more] [|details]', [null, 'about this [|{station}]']]);
+    verifyAll(t, exp, 'about this', 'about this {station}', 'more', 'details', 'more details',
+      'more details about this', 'more about this', 'details about this',
+      'more details about this {station}', 'more about this {station}', 'details about this {station}');
     t.end();
   });
 

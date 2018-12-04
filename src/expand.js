@@ -19,12 +19,12 @@ function generateExpandedSet(prefix, remainder, expansions) {
   return expansions;
 }
 
-export function expandCombinations(values) {
+export function expandCombinations(values, filterEmpty = true) {
   const final = [];
   values.forEach((value) => {
     final.push(...generateExpandedSet('', (value || '').split('['), []));
   });
-  return final;
+  return filterEmpty ? final.filter(e => e.length) : final;
 }
 
 /**
@@ -39,7 +39,7 @@ export function expandCombinations(values) {
  * part1 part3 part4
  * part2 part3 part4
  */
-export function expandSamples(samples) {
+export function expandSamples(samples, filterEmpty = true) {
   if (!samples) { return samples; }
 
   const finalSet = [];
@@ -49,21 +49,24 @@ export function expandSamples(samples) {
     if (pending && Array.isArray(sample)) {
       // We had a scalar before, now an array, which should be combined with the generated
       // values below us.
-      const below = expandSamples(sample);
+      const below = expandSamples(sample, false);
       // Permute pending and below
       pending.forEach(pend => below.forEach(b => finalSet.push(clean(`${pend} ${b}`))));
       return;
     }
     if (ix + 1 < samples.length && Array.isArray(samples[ix + 1])) {
       // Don't produce any nodes yet
-      pending = expandCombinations([sample]);
+      pending = expandCombinations([sample], false);
     } else if (Array.isArray(sample)) {
       // Expansions may happen lower down
-      finalSet.push(...expandSamples(sample));
+      finalSet.push(...expandSamples(sample, false));
     } else {
       // Simple, just expand pipe expressions if necessary
-      finalSet.push(...expandCombinations([sample]));
+      finalSet.push(...expandCombinations([sample], false));
     }
   });
+  if (filterEmpty) {
+    return finalSet.filter(e => e.length);
+  }
   return finalSet;
 }
