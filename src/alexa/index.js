@@ -64,6 +64,10 @@ function dialogBits(intent) {
             elicitation: `elicit-${intent.name}.${slotName}`,
           };
         }
+        if (slot.confirmations?.length) {
+          slotDetails.prompts = slotDetails.prompts || {};
+          slotDetails.prompts.confirmation = `confirm-${intent.name}.${slotName}`;
+        }
         return slotDetails;
       }).filter(s => !!s),
   };
@@ -78,6 +82,15 @@ function getPrompts(intents) {
         prompts.push({
           id: `elicit-${intent.name}.${slotName}`,
           variations: expandSamples(slot.prompts).map(value => ({
+            type: 'PlainText',
+            value,
+          })),
+        });
+      }
+      if (slot.confirmations) {
+        prompts.push({
+          id: `confirm-${intent.name}.${slotName}`,
+          variations: slot.confirmations.map(value => ({
             type: 'PlainText',
             value,
           })),
