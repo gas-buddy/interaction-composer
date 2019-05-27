@@ -81,6 +81,9 @@ function dialogBits(intent) {
         return slotDetails;
       }).filter(s => !!s),
   };
+  if (intent.delegationStrategy) {
+    ret.delegationStrategy = intent.delegationStrategy;
+  }
   return ret;
 }
 
@@ -163,6 +166,7 @@ export default async function buildAlexa(config, intents, slotTypes) {
     },
     dialog: {
       intents: intents.map(dialogBits).filter(i => !!i),
+      delegationStrategy: config.get('delegationStrategy') || 'SKILL_RESPONSE',
     },
     prompts: getPrompts(intents),
   };
