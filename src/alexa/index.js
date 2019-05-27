@@ -35,8 +35,10 @@ function intentOnlyBits(intent) {
         const slotInfo = {
           name,
           type: detail.type,
-          samples: getSamples(name, detail, expandedSamples),
         };
+        if (intent.delegationStrategy === 'ALWAYS') {
+          slotInfo.samples = getSamples(name, detail, expandedSamples);
+        }
         return slotInfo;
       } catch (error) {
         error.message = `${intent.name}.${name}: ${error.message}`;
